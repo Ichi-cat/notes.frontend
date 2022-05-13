@@ -1,0 +1,10 @@
+.block{
+    width: 100px;
+    min-width: 880px;
+    margin: 0 auto;
+    padding: 0 80% 0 auto;
+    text-align:center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 5em;
+}

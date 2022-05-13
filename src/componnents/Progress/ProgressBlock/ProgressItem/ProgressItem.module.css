@@ -1,0 +1,11 @@
+.str{
+    display: grid;
+    grid-template-columns: calc(100% - 25px) 25px;
+    grid-column-gap: 1em;
+    border-bottom: 1px solid #05101E;
+}
+
+.icon_timer{
+    height: 15px;
+    text-align: center;
+}
