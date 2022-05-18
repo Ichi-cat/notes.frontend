@@ -1,0 +1,16 @@
+.text{
+    padding-left: 1em;
+    text-align: left;
+}
+
+.item{
+    margin: 10px 10px 0 30px;
+    display: grid;
+    grid-template-columns: calc(100% - 40px) 20px 20px;
+    border-left: 1px solid #ccc;
+}
+
+.icon{
+    height: 15px;
+    text-align: center;
+}

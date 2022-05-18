@@ -4,3 +4,50 @@
     grid-row-gap: 3em;
 }
 
+/*.category{*/
+/*    display: grid;*/
+/*    grid-template-columns: 10px calc(100% - 20px);*/
+/*}*/
+
+/*.plus{*/
+/*    display: grid;*/
+/*    grid-template-columns:calc(100% - 60px) 20px 20px 20px;*/
+/*}*/
+
+
+
+/*.note{*/
+/*    border-radius: 10px;*/
+/*    height: 500px;*/
+/*}*/
+
+
+/*.list{*/
+/*    overflow-y: scroll;*/
+/*    max-height: 0;*/
+/*}*/
+
+.button {
+    display: block;
+    background: none;
+    color: #ccc;
+    text-align: left;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    width: 50%;
+    height: 130%;
+    margin-left: 20px;
+    cursor: pointer;
+    transition: color 0.5s linear, border 0.5s linear, width 0.5s linear;
+
+}
+
+.button:hover{
+    color: #fbdd8a;
+    border: 2px solid #fbdd8a;
+    width: 70%;
+}
+
+.button:hover:after{
+    display: block;
+}

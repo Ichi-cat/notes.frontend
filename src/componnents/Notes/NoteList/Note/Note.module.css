@@ -1,9 +1,0 @@
-.category{
-    display: grid;
-    grid-template-columns: 10px calc(100% - 20px);
-}
-
-.text{
-    padding-left: 1em;
-    text-align: left;
-}
