@@ -11,7 +11,7 @@ const Category = (props) => {
     }
 
     let notes = props.notes.map(note => {
-        return <Note name={note.name} />
+        return <Note {...note} openNote={props.openNote} />
     });
     return (
         <div className={s.category}>

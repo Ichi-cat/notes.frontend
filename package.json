@@ -6,7 +6,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
-    "notesApiClient1": "git+https://github.com/Ichi-cat/NotesApiClient.git",
+    "notesApiClient": "git+https://github.com/Ichi-cat/javasriptGeneratedClient.git",
     "querystring": "^0.2.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",

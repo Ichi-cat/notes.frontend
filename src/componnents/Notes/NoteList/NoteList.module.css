@@ -2,6 +2,8 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-row-gap: 3em;
+    height: 500px;
+    overflow-y: scroll;
 }
 
 /*.category{*/
@@ -35,7 +37,7 @@
     border: 2px solid #ccc;
     border-radius: 10px;
     width: 50%;
-    height: 130%;
+    height: 30px;
     margin-left: 20px;
     cursor: pointer;
     transition: color 0.5s linear, border 0.5s linear, width 0.5s linear;

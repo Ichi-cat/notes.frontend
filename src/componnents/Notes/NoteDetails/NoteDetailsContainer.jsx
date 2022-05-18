@@ -1,5 +1,6 @@
 import React from "react";
 import {
+    pushNoteDetailsActiveCreator,
     updateNoteTempActionCreator
 } from "../../../redux/notes-reducer";
 import {connect} from "react-redux";
@@ -7,6 +8,7 @@ import NoteDetails from "./NoteDetails";
 
 
 const mapStateToProps = (state) => {
+
     return{
         noteDetails: state.notesPage.details
     }
@@ -14,8 +16,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        updateNoteDetails: () => {
-            dispatch(updateNoteTempActionCreator());
+        updateNoteDetails: (text) => {
+            dispatch(updateNoteTempActionCreator(text));
+        },
+        pushNoteDetails: (id) => {
+            dispatch(pushNoteDetailsActiveCreator(id));
         }
     }
 }

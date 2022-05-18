@@ -1,14 +1,17 @@
-import {CategoryApi, ApiClient, CreateCategoryVm} from "notesApiClient1";
+import {noteApi} from "./apiClients";
+import {UpdateNoteVm} from "notesApiClient";
 
-const ADD_CATEGORY = "ADD-CATEGORY";
-const DELETE_CATEGORY = "DELETE-CATEGORY";
-const UPDATE_CATEGORY_TEMP = "UPDATE-CATEGORY-TEMP";
-const ADD_NOTE = "ADD-NOTE";
-const DELETE_NOTE = "DELETE-NOTE";
-const UPDATE_NOTE_DETAILS = "UPDATE-NOTE-DETAILS";
+const TOGGLE_IS_FETCHING = "TOGGLE_IS_FETCHING";
+
 const UPDATE_NOTE_TEMP = "UPDATE-NOTE-TEMP";
+const OPEN_NOTE = "OPEN_NOTE";
+const PUSH_NOTE_DETAILS = "PUSH_NOTE_DETAILS";
 
+//Category
+const SET_CATEGORIES = "SET_CATEGORIES";
 const SET_ACTIVE = "SET-ACTIVE";
+
+const UPDATE_CATEGORY_TEMP = "UPDATE_CATEGORY_TEMP";
 
 let initialState = {
     categories: [
@@ -23,37 +26,48 @@ let initialState = {
             ]
         },
     ],
-    details: {name: "qwe", text: "ddsa"},
+    details: {id: null, name: "", text: ""},//details of choise note
+    isFetching: false,
     tempCategoryName: ""
 };
 
-let client = new ApiClient();
-client.basePath = "https://localhost:44332";
-client.authentications = {
-    "oauth2": {
-        "type": "oauth2",
-        "accessToken": localStorage.getItem("token")
-    }
-};
-
-export let categoryApi = new CategoryApi(client);
-
 const notesReducer = (state = initialState, action) => {
     switch (action.type){
-        case ADD_CATEGORY:
-            console.log(action.test);
-            let temp = {id: ""}
-            categoryApi.createCategory("1.0", {body: new CreateCategoryVm()},(error, data, response) => createCategory(error, data, response, temp));
-            console.log(temp);
-            return state;
-        case UPDATE_NOTE_TEMP:
-            state.details = action.newText;
-        case UPDATE_CATEGORY_TEMP:
-
+        //toggle preloader
+        case TOGGLE_IS_FETCHING:
             return {
                 ...state,
-                tempCategoryName: action.newName
+                isFetching: action.isFetching
             };
+        //set categories and notes from server
+        case SET_CATEGORIES:
+            return {
+                ...state,
+                categories: action.categories
+            };
+        case UPDATE_NOTE_TEMP:
+            //synchronize noteDetails value
+            state.details.text = action.newText;
+            return {
+                ...state,
+                details: {...state.details, text: action.newText}
+            };
+        case OPEN_NOTE:
+            return {
+                ...state,
+                details: action.details
+            };
+        case PUSH_NOTE_DETAILS:
+            let updateNoteVm = new UpdateNoteVm();
+            updateNoteVm.id = action.id;
+            updateNoteVm.name = state.details.name;
+            updateNoteVm.text = state.details.text;
+            let options = {
+                body: updateNoteVm
+            };
+            noteApi.updateNote("1.0", options, (error, data, response) => console.log("qqq"));
+            return state;
+        //makes category unboxing
         case SET_ACTIVE:
             let updatedCategories = state.categories.map(c => {
                 if(c.id === action.id)
@@ -64,30 +78,33 @@ const notesReducer = (state = initialState, action) => {
                 ...state,
                 categories: updatedCategories
             }
+        case UPDATE_CATEGORY_TEMP:
+
+            return {
+                ...state,
+                tempCategoryName: action.newText
+            }
         default:
             return state;
     }
 }
 
-//support functions(callbacks)
 
 
-
-const createCategory = (error, data, response, temp) => {
-    console.log(response);
-    //create category
-    temp.id = "qwe";
-}
-
-
-
-
+//get category and her notes from the server
+export const setCategoriesActionCreator = (categories) => ({type: SET_CATEGORIES, categories: categories })
+//creates action to synchronize noteDetails text
 export const updateNoteTempActionCreator = (newText) => ({type: UPDATE_NOTE_TEMP, newText: newText })
-
-export const addCategoryActionCreator = (test) => ({type: ADD_CATEGORY, test: test })
-export const updateCategoryActionCreator = (newName) =>
-    ({type: UPDATE_CATEGORY_TEMP, newName})
+//toggle is fetching(true or false, for preloader)
+export const toggleIsFetchingActionCreator = (isFetching) => ({type: TOGGLE_IS_FETCHING, isFetching })
+//set category with pointed id is active(unboxing)
 export const setCategoryActiveCreator = (id) => ({type: SET_ACTIVE, id: id})
+
+export const openNoteActiveCreator = (id, name, text) => ({type: OPEN_NOTE, details: {id: id, name: name, text: text}})
+export const pushNoteDetailsActiveCreator = (id) => ({type: PUSH_NOTE_DETAILS, id: id})
+
+export const updateCategoryTempActiveCreator = (newText) => ({type: UPDATE_CATEGORY_TEMP, newText: newText});
+
 
 export default notesReducer;
 
