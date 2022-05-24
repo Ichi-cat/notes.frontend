@@ -26,7 +26,8 @@ const NoteDetails = (props) => {
             <div className={`${s.note} blue`}>
                 <textarea value={props.noteDetails.text} className={`${s.noteDetails} scroll`}
                           onChange={updateDetailsTemp}
-                          onBlur={pushDetailsOnServer} />
+                          onBlur={pushDetailsOnServer}
+                          disabled={props.noteDetails.isDisabled} />
             </div>
         </div>
     );

@@ -17,7 +17,7 @@ const NoteList = (props) => {
                 props.updateCategoryNameTemp("");
                 props.setCategories(props.categories.concat(
                     {
-                        id: response.body.id,
+                        id: response.body,
                         name: props.tempCategoryName ? props.tempCategoryName : "No name",
                         isActive: false,
                         notes: []
@@ -42,7 +42,6 @@ const NoteList = (props) => {
     //         </div>
     //     </>
     // });
-debugger;
     let categories = props.categories.map((category, id) => {
         return <Category category={category}
                          setActive={props.setActive}
@@ -54,13 +53,17 @@ debugger;
                          updateNoteTempName={props.updateNoteTempName}
                          addNote={props.addNote}
                          toggleNoteIsChanging={props.toggleNoteIsChanging}
-                         key={id} />
+                         updateTempNoteName={props.updateTempNoteName}
+                         editNoteName={props.editNoteName}
+                         deleteNote={props.deleteNote}
+                         deleteCategory={props.deleteCategory}
+                         key={id}
+                         toggleDetailsIsDisabled={props.toggleDetailsIsDisabled} />
     });
 
     return (
         <div>
             <div className={s.categorys}>
-                {/*{categories}*/}
                 {props.isFetching ? <EmptyCategory/> : categories}
                 <div><input className={s.button}
                             value={props.tempCategoryName}

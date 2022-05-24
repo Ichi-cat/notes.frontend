@@ -1,14 +1,21 @@
 import React from "react";
 import {
-    activeNoteInputActiveCreator, addNoteActiveCreator,
+    activeNoteInputActiveCreator,
+    addNoteActiveCreator,
+    deleteCategoryActionCreator,
+    deleteNoteActionCreator,
+    editNoteNameActionCreator,
     openNoteActiveCreator,
     setCategoriesActionCreator,
-    setCategoryActiveCreator,
+    setCategoryActiveCreator, toggleDetailsIsDisabledActionCreator,
     toggleIsChangingActiveCreator,
-    toggleIsFetchingActionCreator, toggleNoteIsChangingActiveCreator,
+    toggleIsFetchingActionCreator,
+    toggleNoteIsChangingActiveCreator,
     updateCategoryNameActiveCreator,
     updateCategoryTempActiveCreator,
-    updateCurrentCategoryActiveCreator, updateNoteTempNameActiveCreator
+    updateCurrentCategoryActiveCreator,
+    updateNoteTempNameActiveCreator,
+    updateTempNoteNameActiveCreator
 } from "../../../redux/notes-reducer";
 import {connect} from "react-redux";
 import NoteList from "./NoteList";
@@ -63,8 +70,23 @@ const mapDispatchToProps = (dispatch) => {
         addNote: (id, noteId) => {
             dispatch(addNoteActiveCreator(id, noteId));
         },
-        toggleNoteIsChanging: (id, categoryId) => {
-            dispatch(toggleNoteIsChangingActiveCreator(id, categoryId));
+        toggleNoteIsChanging: (id, categoryId, isChanging) => {
+            dispatch(toggleNoteIsChangingActiveCreator(id, categoryId, isChanging));
+        },
+        updateTempNoteName: (id, categoryId, newName) => {
+            dispatch(updateTempNoteNameActiveCreator(id, categoryId, newName));
+        },
+        editNoteName: (id, categoryId) => {
+            dispatch(editNoteNameActionCreator(id, categoryId));
+        },
+        deleteNote: (id, categoryId) => {
+            dispatch(deleteNoteActionCreator(id, categoryId));
+        },
+        deleteCategory: (id) => {
+            dispatch(deleteCategoryActionCreator(id));
+        },
+        toggleDetailsIsDisabled: (isDisabled) => {
+            dispatch(toggleDetailsIsDisabledActionCreator(isDisabled));
         }
     }
 }
@@ -92,7 +114,10 @@ class NoteListContainer extends React.Component{
                 noteInputIsActive: false,
                 tempName: category.name ? category.name : "No name",
                 noteTempName: "",
-                notes: response.body.notes.map(note => ({...note, isChanging: false}))
+                notes: response.body.notes.map(note => {
+                    return {...note, isChanging: false, tempName: note.name}
+                    }
+                )
             }]);
         this.props.setCategories(categories);
         //if it is last category, preloader turn off

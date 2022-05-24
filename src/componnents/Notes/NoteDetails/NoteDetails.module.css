@@ -18,3 +18,7 @@
     text-align: justify;
     cursor: text;
 }
+.noteDetails:disabled {
+    background: grey;
+    cursor: default;
+}

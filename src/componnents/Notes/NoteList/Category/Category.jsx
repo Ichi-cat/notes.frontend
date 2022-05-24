@@ -59,12 +59,20 @@ const Category = (props) => {
             });
         }
     }
-debugger;
+    const deleteCategory = () => {
+        categoryApi.deleteCategory(props.category.id, "1.0", (error, data, response) => {
+            props.deleteCategory(props.category.id);
+        })
+    }
     let notes = props.category.notes.map(note => {
         return <Note {...note}
                      currentCategory={props.category.id}
                      openNote={props.openNote}
-                     toggleNoteIsChanging={props.toggleNoteIsChanging} />
+                     toggleNoteIsChanging={props.toggleNoteIsChanging}
+                     updateTempNoteName={props.updateTempNoteName}
+                     editNoteName={props.editNoteName}
+                     deleteNote={props.deleteNote}
+                     toggleDetailsIsDisabled={props.toggleDetailsIsDisabled} />
     });
     return (
         <div className={s.category}>
@@ -74,7 +82,7 @@ debugger;
                         <div className={s.text} onClick={setActive}>{props.category.name}</div>
                         <div><img className={s.icon} src={plus} onClick={openNoteInput}/></div>
                         <div><img className={s.icon} src={pen} onClick={toggleIsChanging}/></div>
-                        <div><img className={s.icon} src={bucket}/></div>
+                        <div><img className={s.icon} src={bucket} onClick={deleteCategory}/></div>
                     </>
                     :
                     <input className={s.button}

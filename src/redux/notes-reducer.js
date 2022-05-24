@@ -22,6 +22,12 @@ const UPDATE_NOTE_TEMP_NAME = "UPDATE_NOTE_TEMP_NAME";
 const ADD_NOTE = "ADD_NOTE";
 const TOGGLE_NOTE_IS_CHANGING = "TOGGLE_NOTE_IS_CHANGING";
 
+const UPDATE_TEMP_NOTE_NAME = "UPDATE_TEMP_NOTE_NAME";
+const EDIT_NOTE_NAME = "EDIT_NOTE_NAME";
+const DELETE_NOTE = "DELETE_NOTE";
+const DELETE_CATEGORY = "DELETE_CATEGORY";
+const TOGGLE_DETAILS_IS_DISABLED = "TOGGLE_DETAILS_IS_DISABLED";
+
 let initialState = {
     categories: [
         {id: 1, name: "nm", isActive: false, isChanging: false, notes: [
@@ -35,7 +41,7 @@ let initialState = {
             ]
         },
     ],
-    details: {id: "", name: "", text: "", currentCategory: ""},//details of choise note
+    details: {id: "", name: "", text: "", currentCategory: "", isDisabled: true},//details of choise note
     isFetching: false,
     tempCategoryName: ""
 };
@@ -51,6 +57,7 @@ const notesReducer = (state = initialState, action) => {
             };
         //set categories and notes from server
         case SET_CATEGORIES:
+            debugger;
             return {
                 ...state,
                 categories: action.categories
@@ -177,18 +184,67 @@ const notesReducer = (state = initialState, action) => {
                 categories: newCat
             }
         case TOGGLE_NOTE_IS_CHANGING:
-            debugger;
             return {
                 ...state,
                 categories: state.categories.map(category => {
                     if(category.id === action.categoryId){
                         category.notes.map(note => {
-                            if(note.id === action.id) note.isChanging = true;
+                            if(note.id === action.id) note.isChanging = action.isChanging;
                             return note;
                         });
                     }
                     return category;
                 })
+            }
+        case UPDATE_TEMP_NOTE_NAME:
+            return {
+                ...state,
+                categories: state.categories.map(category => {
+                    if(category.id === action.categoryId){
+                        category.notes.map(note => {
+                            if(note.id === action.id) note.tempName = action.newName;
+                            return note;
+                        });
+                    }
+                    return category;
+                })
+            }
+        case EDIT_NOTE_NAME:
+            return {
+                ...state,
+                categories: state.categories.map(category => {
+                    if(category.id === action.categoryId){
+                        category.notes.map(note => {
+                            if(note.id === action.id) note.name = note.tempName;
+                            return note;
+                        });
+                    }
+                    return category;
+                })
+            }
+        case DELETE_NOTE:
+            return {
+                ...state,
+                categories: state.categories.map(category => {
+                    if(category.id === action.categoryId){
+                        category.notes = category.notes.filter(note => {
+                            return !(note.id === action.id);
+                        });
+                    }
+                    return category;
+                })
+            }
+        case DELETE_CATEGORY:
+            return {
+                ...state,
+                categories: state.categories.filter(category => {
+                    return !(category.id === action.id)
+                    })
+                }
+        case TOGGLE_DETAILS_IS_DISABLED:
+            return {
+                ...state,
+                details: {...state.details, isDisabled: action.isDisables}
             }
         default:
             return state;
@@ -218,7 +274,12 @@ export const updateNoteTempNameActiveCreator = (id, newName) => ({type: UPDATE_N
 export const addNoteActiveCreator = (id, noteId) => ({type: ADD_NOTE, id: id, noteId: noteId});
 
 
-export const toggleNoteIsChangingActiveCreator = (id, categoryId) => ({type: TOGGLE_NOTE_IS_CHANGING, id: id, categoryId: categoryId});
+export const toggleNoteIsChangingActiveCreator = (id, categoryId, isChanging) => ({type: TOGGLE_NOTE_IS_CHANGING, id: id, categoryId: categoryId, isChanging: isChanging});
+export const updateTempNoteNameActiveCreator = (id, categoryId, newName) => ({type: UPDATE_TEMP_NOTE_NAME, id: id, categoryId: categoryId, newName: newName});
+export const editNoteNameActionCreator = (id, categoryId) => ({type: EDIT_NOTE_NAME, id: id, categoryId: categoryId});
+export const deleteNoteActionCreator = (id, categoryId) => ({type: DELETE_NOTE, id: id, categoryId: categoryId});
+export const deleteCategoryActionCreator = (id) => ({type: DELETE_CATEGORY, id: id});
+export const toggleDetailsIsDisabledActionCreator = (isDisabled) => ({type: TOGGLE_DETAILS_IS_DISABLED, isDisables: isDisabled});
 
 
 
