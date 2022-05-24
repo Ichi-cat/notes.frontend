@@ -1,9 +1,14 @@
 import React from "react";
 import {
+    activeNoteInputActiveCreator, addNoteActiveCreator,
     openNoteActiveCreator,
     setCategoriesActionCreator,
     setCategoryActiveCreator,
-    toggleIsFetchingActionCreator, updateCategoryTempActiveCreator
+    toggleIsChangingActiveCreator,
+    toggleIsFetchingActionCreator, toggleNoteIsChangingActiveCreator,
+    updateCategoryNameActiveCreator,
+    updateCategoryTempActiveCreator,
+    updateCurrentCategoryActiveCreator, updateNoteTempNameActiveCreator
 } from "../../../redux/notes-reducer";
 import {connect} from "react-redux";
 import NoteList from "./NoteList";
@@ -32,13 +37,34 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(toggleIsFetchingActionCreator(isFetching));
         },
 
-        openNote: (id, name, text) => {
-            dispatch(openNoteActiveCreator(id, name, text));
+        openNote: (id, name, text, currentCategory) => {
+            dispatch(openNoteActiveCreator(id, name, text, currentCategory));
         },
 
         updateCategoryNameTemp: (newText) => {
-            debugger;
             dispatch(updateCategoryTempActiveCreator(newText));
+        },
+
+        toggleIsChanging: (id, isChanging) => {
+            dispatch(toggleIsChangingActiveCreator(id, isChanging));
+        },
+        updateCurrentCategoryNameTemp: (id, newText) => {
+            dispatch(updateCurrentCategoryActiveCreator(id, newText));
+        },
+        editCategory: (id) => {
+            dispatch(updateCategoryNameActiveCreator(id));
+        },
+        activeNoteInput: (id) => {
+            dispatch(activeNoteInputActiveCreator(id));
+        },
+        updateNoteTempName: (id, newName) => {
+            dispatch(updateNoteTempNameActiveCreator(id, newName));
+        },
+        addNote: (id, noteId) => {
+            dispatch(addNoteActiveCreator(id, noteId));
+        },
+        toggleNoteIsChanging: (id, categoryId) => {
+            dispatch(toggleNoteIsChangingActiveCreator(id, categoryId));
         }
     }
 }
@@ -46,9 +72,8 @@ const mapDispatchToProps = (dispatch) => {
 
 class NoteListContainer extends React.Component{
     componentDidMount() {
-        //do request to get notes
+        //send request to get notes
         this.props.toggleIsFetching(true);
-        //this.props.setCategories([]);
         this.props.setCategories([]);
         categoryApi.getCategories("1.0", this.onCategoryDownload.bind(this));
 
@@ -56,35 +81,36 @@ class NoteListContainer extends React.Component{
 
     onNotesDownload(error, data, response, category, isLast){
         //add category and her notes
-        console.log(response);
-        debugger;
-        let categories = this.props.categories.concat({id: category.id,
-            name: category.name ? category.name : "No name",
-            isActive: false,
-            notes: response.body.notes});
-        /////////////
+
+        //create new category list with notes
+        let categories = this.props.categories.concat([
+            {
+                id: category.id,
+                name: category.name ? category.name : "No name",
+                isActive: false,
+                isChanging: false,
+                noteInputIsActive: false,
+                tempName: category.name ? category.name : "No name",
+                noteTempName: "",
+                notes: response.body.notes.map(note => ({...note, isChanging: false}))
+            }]);
         this.props.setCategories(categories);
+        //if it is last category, preloader turn off
         if(isLast) this.props.toggleIsFetching(false);
     }
     onCategoryDownload(error, data, response){
-
-        console.log(response);
-
-        let i = 1;
+        //get all categories and send request for notes to every category
         response.body.categories.forEach((category, index, arr) => {
             noteApi.getNotesByCategoryId(category.id, "1.0",
                 (error, data, response) => {
-                console.log(i);
-                i++;
+                    //is it last category
+                    //if true, toggle fetching on false after getting notes
                     let isLast = false;
-                    if(index == arr.length - 1) isLast = true;
+                    if(index === arr.length - 1) isLast = true;
                     this.onNotesDownload(error, data, response, category, isLast);
                 })
             });
         }
-        // response.body.categories.map(category => ({id: category.id,
-        //     name: category.name,
-        //     notes: noteApi.getNoteById("1.0", )}));
 
 
     render(){

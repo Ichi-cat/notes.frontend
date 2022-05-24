@@ -59,3 +59,20 @@
         max-height: 0;
     }
 }
+
+.button {
+    display: block;
+    background: none;
+    color: #ccc;
+    text-align: left;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    width: 50%;
+    height: 30px;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+    transition: color 0.5s linear, border 0.5s linear, width 0.5s linear;
+
+}

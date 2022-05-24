@@ -19,8 +19,8 @@ const mapDispatchToProps = (dispatch) => {
         updateNoteDetails: (text) => {
             dispatch(updateNoteTempActionCreator(text));
         },
-        pushNoteDetails: (id) => {
-            dispatch(pushNoteDetailsActiveCreator(id));
+        pushNoteDetails: (noteDetails) => {
+            dispatch(pushNoteDetailsActiveCreator(noteDetails));
         }
     }
 }

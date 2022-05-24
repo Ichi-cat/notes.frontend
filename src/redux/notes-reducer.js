@@ -1,5 +1,5 @@
-import {noteApi} from "./apiClients";
-import {UpdateNoteVm} from "notesApiClient";
+import {categoryApi, noteApi} from "./apiClients";
+import {CreateCategoryVm, UpdateNoteVm} from "notesApiClient";
 
 const TOGGLE_IS_FETCHING = "TOGGLE_IS_FETCHING";
 
@@ -10,28 +10,38 @@ const PUSH_NOTE_DETAILS = "PUSH_NOTE_DETAILS";
 //Category
 const SET_CATEGORIES = "SET_CATEGORIES";
 const SET_ACTIVE = "SET-ACTIVE";
+const CREATE_CATEGORY = "CREATE_CATEGORY";
+const UPDATE_CATEGORY = "UPDATE_CATEGORY";
 
 const UPDATE_CATEGORY_TEMP = "UPDATE_CATEGORY_TEMP";
+const TOGGLE_IS_CHANGING = "TOGGLE_IS_CHANGING";
+const UPDATE_CURRENT_CATEGORY = "UPDATE_CURRENT_CATEGORY";
+const ACTIVE_NOTE_INPUT = "ACTIVE_NOTE_INPUT";
+const UPDATE_NOTE_TEMP_NAME = "UPDATE_NOTE_TEMP_NAME";
+
+const ADD_NOTE = "ADD_NOTE";
+const TOGGLE_NOTE_IS_CHANGING = "TOGGLE_NOTE_IS_CHANGING";
 
 let initialState = {
     categories: [
-        {id: 1, name: "nm", isActive: false, notes: [
+        {id: 1, name: "nm", isActive: false, isChanging: false, notes: [
                 {id: 1, name: "title"},
                 {id: 2, name: "title2"}
             ]
         },
-        {id: 2, name: "nm2", isActive: false, notes: [
+        {id: 2, name: "nm2", isActive: false, isChanging: false, notes: [
                 {id: 3, name: "title"},
                 {id: 4, name: "title2"}
             ]
         },
     ],
-    details: {id: null, name: "", text: ""},//details of choise note
+    details: {id: "", name: "", text: "", currentCategory: ""},//details of choise note
     isFetching: false,
     tempCategoryName: ""
 };
 
 const notesReducer = (state = initialState, action) => {
+    debugger;
     switch (action.type){
         //toggle preloader
         case TOGGLE_IS_FETCHING:
@@ -58,15 +68,19 @@ const notesReducer = (state = initialState, action) => {
                 details: action.details
             };
         case PUSH_NOTE_DETAILS:
-            let updateNoteVm = new UpdateNoteVm();
-            updateNoteVm.id = action.id;
-            updateNoteVm.name = state.details.name;
-            updateNoteVm.text = state.details.text;
-            let options = {
-                body: updateNoteVm
+            debugger;
+            return {
+                ...state,
+                categories: state.categories.map(category => {
+                    if(category.id === action.noteDetails.currentCategory){
+                        category.notes.map(note => {
+                            if(note.id === action.noteDetails.id) note.text = action.noteDetails.text;
+                            return note;
+                        });
+                    }
+                    return category;
+                })
             };
-            noteApi.updateNote("1.0", options, (error, data, response) => console.log("qqq"));
-            return state;
         //makes category unboxing
         case SET_ACTIVE:
             let updatedCategories = state.categories.map(c => {
@@ -84,6 +98,98 @@ const notesReducer = (state = initialState, action) => {
                 ...state,
                 tempCategoryName: action.newText
             }
+        case CREATE_CATEGORY:
+            let createCategoryVm = new CreateCategoryVm();
+            createCategoryVm.name = state.tempCategoryName;
+            let createCategoryOptions = {
+                body: createCategoryVm
+            };
+            categoryApi.createCategory("1.0", createCategoryOptions, (error, data, response) => console.log(response));
+            return {
+                ...state,
+                categories: state.categories.concat([
+                    {
+
+                    }
+                ])
+            };
+        case TOGGLE_IS_CHANGING:
+            let newCategories = state.categories.map(category => {
+                if(category.id === action.id) category.isChanging = action.isChanging;
+                return category;
+            });
+            return {
+                ...state,
+                categories: newCategories
+            }
+        case UPDATE_CURRENT_CATEGORY:
+            let updatedCategoriesTempName = state.categories.map(category => {
+                if(category.id === action.id) category.tempName = action.newName;
+                return category;
+            });
+            return {
+                ...state,
+                categories: updatedCategoriesTempName
+            }
+        case UPDATE_CATEGORY:
+            let updatedCategory = state.categories.map(category => {
+                if(category.id === action.id) category.name = category.tempName;
+                return category;
+            });
+            return {
+                ...state,
+                categories: updatedCategory
+            }
+        case ACTIVE_NOTE_INPUT:
+            return {
+                ...state,
+                categories: state.categories.map(category => {
+                    if(category.id === action.id) category.noteInputIsActive = true;
+                    return category;
+                })
+            }
+        case UPDATE_NOTE_TEMP_NAME:
+            return {
+                ...state,
+                categories: state.categories.map(category => {
+                    if(category.id === action.id) category.noteTempName = action.newName;
+                    return category;
+                })
+            }
+        case ADD_NOTE:
+            let newCat = state.categories.map(category => {
+                if(category.id === action.id) {
+                    category.notes.push(
+                        {
+                            id: action.noteId,
+                            name: category.noteTempName,
+                            text: ""
+                        }
+                    );
+                    category.noteTempName = "";
+                    category.noteInputIsActive = false;
+                }
+                return category;
+            });
+            debugger;
+            return {
+                ...state,
+                categories: newCat
+            }
+        case TOGGLE_NOTE_IS_CHANGING:
+            debugger;
+            return {
+                ...state,
+                categories: state.categories.map(category => {
+                    if(category.id === action.categoryId){
+                        category.notes.map(note => {
+                            if(note.id === action.id) note.isChanging = true;
+                            return note;
+                        });
+                    }
+                    return category;
+                })
+            }
         default:
             return state;
     }
@@ -100,10 +206,21 @@ export const toggleIsFetchingActionCreator = (isFetching) => ({type: TOGGLE_IS_F
 //set category with pointed id is active(unboxing)
 export const setCategoryActiveCreator = (id) => ({type: SET_ACTIVE, id: id})
 
-export const openNoteActiveCreator = (id, name, text) => ({type: OPEN_NOTE, details: {id: id, name: name, text: text}})
-export const pushNoteDetailsActiveCreator = (id) => ({type: PUSH_NOTE_DETAILS, id: id})
+export const openNoteActiveCreator = (id, name, text, currentCategory) => ({type: OPEN_NOTE, details: {id: id, name: name, text: text, currentCategory: currentCategory}})
+export const pushNoteDetailsActiveCreator = (noteDetails) => ({type: PUSH_NOTE_DETAILS, noteDetails: noteDetails})
 
 export const updateCategoryTempActiveCreator = (newText) => ({type: UPDATE_CATEGORY_TEMP, newText: newText});
+export const toggleIsChangingActiveCreator = (id, isChanging) => ({type: TOGGLE_IS_CHANGING, id: id, isChanging: isChanging});
+export const updateCurrentCategoryActiveCreator = (id, newName) => ({type: UPDATE_CURRENT_CATEGORY, id: id, newName: newName});
+export const updateCategoryNameActiveCreator = (id) => ({type: UPDATE_CATEGORY, id: id});
+export const activeNoteInputActiveCreator = (id) => ({type: ACTIVE_NOTE_INPUT, id: id});
+export const updateNoteTempNameActiveCreator = (id, newName) => ({type: UPDATE_NOTE_TEMP_NAME, id: id, newName: newName});
+export const addNoteActiveCreator = (id, noteId) => ({type: ADD_NOTE, id: id, noteId: noteId});
+
+
+export const toggleNoteIsChangingActiveCreator = (id, categoryId) => ({type: TOGGLE_NOTE_IS_CHANGING, id: id, categoryId: categoryId});
+
+
 
 
 export default notesReducer;
