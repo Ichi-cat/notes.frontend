@@ -1,0 +1,8 @@
+.box{
+    display: inline-block;
+    text-align: left;
+    padding: 15px;
+    overflow-y: scroll;
+    /*transition: transform .15s;*/
+
+}

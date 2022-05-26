@@ -47,7 +47,6 @@ let initialState = {
 };
 
 const notesReducer = (state = initialState, action) => {
-    debugger;
     switch (action.type){
         //toggle preloader
         case TOGGLE_IS_FETCHING:

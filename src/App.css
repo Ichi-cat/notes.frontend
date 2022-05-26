@@ -79,5 +79,68 @@ main{
 
 .scroll::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background: linear-gradient(180deg, #00c6fb, #005bea);
 }
+
+.scroll_blue::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #005bea, #00c6fb);
+}
+
+.scroll_pink::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #b313cc, #FF66C4);
+}
+
+.scroll_yellow::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #fa811e, #FACE1E);
+}
+
+.scroll_green::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #0b8600, #7ED957);
+}
+
+/*Blocks animation*/
+
+.anim{
+  animation: show 3s;
+  animation-fill-mode: forwards;
+  z-index: 1;
+}
+
+.hide{
+  animation: hide 3s;
+  animation-fill-mode: forwards;
+  z-index: 0;
+}
+
+@keyframes show{
+  0%{
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(1.5);
+
+    /*transition: transform .5s;*/
+    font-size: 10px;
+  }
+}
+
+@keyframes hide{
+  0%{
+    transform: scale(1.5);
+  }
+  100%{
+    transform: scale(1);
+    z-index: 0;
+    /*transition: transform .5s;*/
+    font-size: 15px;
+  }
+}
+
+.b_1 {
+  transform-origin: left top;
+
+}
+.b_2 { transform-origin: right top; }
+
+.b_3 { transform-origin: left bottom; }
+
+.b_4 { transform-origin: right bottom; }
