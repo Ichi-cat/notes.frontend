@@ -3,7 +3,7 @@
     grid-template-columns: 1fr;
     grid-row-gap: 3em;
     height: 500px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 /*.category{*/
@@ -53,4 +53,10 @@
 
 .button:hover:after{
     display: block;
+}
+
+.but {
+    height: 35px;
+    width: 50%;
+    border-radius: 10px;
 }

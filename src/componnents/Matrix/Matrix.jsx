@@ -5,7 +5,6 @@ import s from './Matrix.module.css'
 const Matrix = (props) => {
     let blockElement = React.createRef();
     const setAllInactive = (e) => {
-        debugger;
         props.setActive(0, false);
     }
     const matrices = props.blocks.map((block, index) => {

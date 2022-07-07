@@ -6,8 +6,9 @@ import {
     deleteNoteActionCreator,
     editNoteNameActionCreator,
     openNoteActiveCreator,
-    setCategoriesActionCreator,
-    setCategoryActiveCreator, toggleDetailsIsDisabledActionCreator,
+    setCategoriesActionCreator, setCategoryActiveCreator, setCategoryNotesActionCreator,
+    toggleDetailsIsDisabledActionCreator,
+    toggleIsCategoryFetchingCreator,
     toggleIsChangingActiveCreator,
     toggleIsFetchingActionCreator,
     toggleNoteIsChangingActiveCreator,
@@ -28,7 +29,9 @@ const mapStateToProps = (state) => {
     return{
         categories: state.notesPage.categories,
         isFetching: state.notesPage.isFetching,
-        tempCategoryName: state.notesPage.tempCategoryName
+        onDownloadCategoryIds: state.notesPage.onDownloadCategoryIds,
+        tempCategoryName: state.notesPage.tempCategoryName,
+        activeCategories: state.notesPage.activeCategories
     }
 }
 
@@ -37,8 +40,8 @@ const mapDispatchToProps = (dispatch) => {
         setCategories: (categories) => {
             dispatch(setCategoriesActionCreator(categories));
         },
-        setActive: (id) => {
-            dispatch(setCategoryActiveCreator(id));
+        toggleIsCategoryFetching: (isFetching, id) => {
+            dispatch(toggleIsCategoryFetchingCreator(isFetching, id));
         },
         toggleIsFetching: (isFetching) => {
             dispatch(toggleIsFetchingActionCreator(isFetching));
@@ -87,6 +90,12 @@ const mapDispatchToProps = (dispatch) => {
         },
         toggleDetailsIsDisabled: (isDisabled) => {
             dispatch(toggleDetailsIsDisabledActionCreator(isDisabled));
+        },
+        setCategoryNotes: (id, notes) =>  {
+            dispatch(setCategoryNotesActionCreator(id, notes));
+        },
+        setActive: (id) => {
+            dispatch(setCategoryActiveCreator(id));
         }
     }
 }
@@ -125,16 +134,20 @@ class NoteListContainer extends React.Component{
     }
     onCategoryDownload(error, data, response){
         //get all categories and send request for notes to every category
-        response.body.categories.forEach((category, index, arr) => {
-            noteApi.getNotesByCategoryId(category.id, "1.0",
-                (error, data, response) => {
-                    //is it last category
-                    //if true, toggle fetching on false after getting notes
-                    let isLast = false;
-                    if(index === arr.length - 1) isLast = true;
-                    this.onNotesDownload(error, data, response, category, isLast);
-                })
-            });
+        this.props.setCategories(data.categories.map(category => {
+            return {...category, tempName: category.name, noteTempName: "", isActive: false, isChanging: false, notes: []}
+        }));
+        this.props.toggleIsFetching(false);
+        // data.categories.forEach((category, index, arr) => {
+        //     noteApi.getNotesByCategoryId(category.id, "1.0",
+        //         (error, data, response) => {
+        //             //is it last category
+        //             //if true, toggle fetching on false after getting notes
+        //             let isLast = false;
+        //             if(index === arr.length - 1) isLast = true;
+        //             this.onNotesDownload(error, data, response, category, isLast);
+        //         })
+        //     });
         }
 
 
