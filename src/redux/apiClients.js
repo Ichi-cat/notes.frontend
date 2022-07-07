@@ -2,7 +2,7 @@ import {ApiClient, CategoryApi, NoteApi} from "notesApiClient";
 
 
 const apiClient = new ApiClient()
-apiClient.basePath = "https://localhost:44332";
+apiClient.basePath = "https://192.168.0.123:5001";
 apiClient.authentications = {
     "oauth2": {
         "type": "oauth2",

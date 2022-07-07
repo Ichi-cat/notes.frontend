@@ -29,22 +29,9 @@ const NoteList = (props) => {
     const updateCategoryNameOnInput = (e) => {
         props.updateCategoryNameTemp(e.currentTarget.value);
     }
-
-    // props.addCategory();
-    // console.log(props);
-
-    // let notes = props.categories.map(category => {
-    //     return <>
-    //         <div>
-    //             {category.notes.map(note =>{
-    //                 return <Note name={note.name}/>
-    //             })}
-    //         </div>
-    //     </>
-    // });
     let categories = props.categories.map((category, id) => {
         return <Category category={category}
-                         setActive={props.setActive}
+                         toggleIsCategoryFetching={props.toggleIsCategoryFetching}
                          openNote={props.openNote}
                          toggleIsChanging={props.toggleIsChanging}
                          updateCurrentCategoryNameTemp={props.updateCurrentCategoryNameTemp}
@@ -58,18 +45,37 @@ const NoteList = (props) => {
                          deleteNote={props.deleteNote}
                          deleteCategory={props.deleteCategory}
                          key={id}
-                         toggleDetailsIsDisabled={props.toggleDetailsIsDisabled} />
+                         toggleDetailsIsDisabled={props.toggleDetailsIsDisabled}
+                         isCategoryFetching={props.onDownloadCategoryIds.some(id => id === category.id)}
+                         setCategoryNotes={props.setCategoryNotes}
+                         activeCategories={props.activeCategories}
+                         setActive={props.setActive}
+        />
     });
 
     return (
         <div>
-            <div className={s.categorys}>
-                {props.isFetching ? <EmptyCategory/> : categories}
-                <div><input className={s.button}
-                            value={props.tempCategoryName}
-                            placeholder="+ add category"
-                            onKeyPress={createCategoryOnKeyPress}
-                            onChange={updateCategoryNameOnInput} /></div>
+            <div className={`${s.categorys} scroll`}>
+                {props.isFetching ?
+                <>
+                    <EmptyCategory/>
+                    <EmptyCategory/>
+                    <EmptyCategory/>
+                    <EmptyCategory/>
+                    <EmptyCategory/>
+                    <div className={`${s.but} priloader`}/>
+                </> : 
+                <>
+                {categories}
+                    <div>
+                        <input className={s.button}
+                                value={props.tempCategoryName}
+                                placeholder="+ add category"
+                                onKeyPress={createCategoryOnKeyPress}
+                                onChange={updateCategoryNameOnInput} />
+                    </div>
+                </>
+                }
             </div>
         </div>
     );

@@ -8,6 +8,11 @@
     grid-template-columns:calc(100% - 60px) 20px 20px 20px;
 }
 
+.plus_loader {
+    display: grid;
+    grid-template-columns:calc(100% - 60px) 60px
+}
+
 .text{
     padding-left: 1em;
     text-align: left;
@@ -18,11 +23,6 @@
     display: grid;
     grid-template-columns: calc(100% - 40px) 20px 20px;
     border-left: 1px solid #ccc;
-}
-
-.icon{
-    height: 15px;
-    text-align: center;
 }
 
 .list{
@@ -40,6 +40,12 @@
 .inactive{
     animation: hide 1s;
     animation-fill-mode: forwards;
+}
+
+.cat {
+    height: 35px;
+    width: 95%;
+    border-radius: 10px;
 }
 
 @keyframes show {

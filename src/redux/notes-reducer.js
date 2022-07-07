@@ -10,6 +10,7 @@ const PUSH_NOTE_DETAILS = "PUSH_NOTE_DETAILS";
 //Category
 const SET_CATEGORIES = "SET_CATEGORIES";
 const SET_ACTIVE = "SET-ACTIVE";
+const TOGGLE_CATEGORY_FETCHING = "TOGGLE_CATEGORY_FETCHING";
 const CREATE_CATEGORY = "CREATE_CATEGORY";
 const UPDATE_CATEGORY = "UPDATE_CATEGORY";
 
@@ -27,6 +28,8 @@ const EDIT_NOTE_NAME = "EDIT_NOTE_NAME";
 const DELETE_NOTE = "DELETE_NOTE";
 const DELETE_CATEGORY = "DELETE_CATEGORY";
 const TOGGLE_DETAILS_IS_DISABLED = "TOGGLE_DETAILS_IS_DISABLED";
+const SET_CATEGORY_NOTES = "SET_CATEGORY_NOTES";
+const SET_DEFAULT_DETAILS = "SET_DEFAULT_DETAILS";
 
 let initialState = {
     categories: [
@@ -41,12 +44,15 @@ let initialState = {
             ]
         },
     ],
+    onDownloadCategoryIds: [],
+    activeCategories: ["a25c484c-3420-4ec0-be86-71ad7b8d7d0f"],
     details: {id: "", name: "", text: "", currentCategory: "", isDisabled: true},//details of choise note
     isFetching: false,
     tempCategoryName: ""
 };
 
 const notesReducer = (state = initialState, action) => {
+    window.state = state;
     switch (action.type){
         //toggle preloader
         case TOGGLE_IS_FETCHING:
@@ -56,7 +62,6 @@ const notesReducer = (state = initialState, action) => {
             };
         //set categories and notes from server
         case SET_CATEGORIES:
-            debugger;
             return {
                 ...state,
                 categories: action.categories
@@ -68,13 +73,17 @@ const notesReducer = (state = initialState, action) => {
                 ...state,
                 details: {...state.details, text: action.newText}
             };
+        case SET_DEFAULT_DETAILS:
+            return {
+                ...state,
+                details: {id: "", name: "", text: "", currentCategory: "", isDisabled: true}
+            }
         case OPEN_NOTE:
             return {
                 ...state,
                 details: action.details
             };
         case PUSH_NOTE_DETAILS:
-            debugger;
             return {
                 ...state,
                 categories: state.categories.map(category => {
@@ -97,6 +106,13 @@ const notesReducer = (state = initialState, action) => {
             return {
                 ...state,
                 categories: updatedCategories
+            }
+        case TOGGLE_CATEGORY_FETCHING:
+            return {
+                ...state,
+                onDownloadCategoryIds: action.isFetching ?
+                    [...state.onDownloadCategoryIds, action.id]
+                    : state.onDownloadCategoryIds.filter(id => id != action.id)
             }
         case UPDATE_CATEGORY_TEMP:
 
@@ -177,7 +193,6 @@ const notesReducer = (state = initialState, action) => {
                 }
                 return category;
             });
-            debugger;
             return {
                 ...state,
                 categories: newCat
@@ -245,6 +260,14 @@ const notesReducer = (state = initialState, action) => {
                 ...state,
                 details: {...state.details, isDisabled: action.isDisables}
             }
+        case SET_CATEGORY_NOTES:
+            return {
+                ...state,
+                categories: state.categories.map(category => {
+                    if(category.id === action.id) category.notes = action.notes.map(note => ({...note, tempName: note.name}));
+                    return category;
+                })
+            }
         default:
             return state;
     }
@@ -260,6 +283,7 @@ export const updateNoteTempActionCreator = (newText) => ({type: UPDATE_NOTE_TEMP
 export const toggleIsFetchingActionCreator = (isFetching) => ({type: TOGGLE_IS_FETCHING, isFetching })
 //set category with pointed id is active(unboxing)
 export const setCategoryActiveCreator = (id) => ({type: SET_ACTIVE, id: id})
+export const toggleIsCategoryFetchingCreator = (isFetching, id) => ({type: TOGGLE_CATEGORY_FETCHING, isFetching, id})
 
 export const openNoteActiveCreator = (id, name, text, currentCategory) => ({type: OPEN_NOTE, details: {id: id, name: name, text: text, currentCategory: currentCategory}})
 export const pushNoteDetailsActiveCreator = (noteDetails) => ({type: PUSH_NOTE_DETAILS, noteDetails: noteDetails})
@@ -279,6 +303,8 @@ export const editNoteNameActionCreator = (id, categoryId) => ({type: EDIT_NOTE_N
 export const deleteNoteActionCreator = (id, categoryId) => ({type: DELETE_NOTE, id: id, categoryId: categoryId});
 export const deleteCategoryActionCreator = (id) => ({type: DELETE_CATEGORY, id: id});
 export const toggleDetailsIsDisabledActionCreator = (isDisabled) => ({type: TOGGLE_DETAILS_IS_DISABLED, isDisables: isDisabled});
+export const setCategoryNotesActionCreator = (id, notes) => ({type: SET_CATEGORY_NOTES, id, notes});
+export const setDefaultDetailsActionCreator = () => ({type: SET_DEFAULT_DETAILS});
 
 
 

@@ -7,7 +7,6 @@ const NoteDetails = (props) => {
     const updateDetailsTemp = (e) => {
         props.updateNoteDetails(e.currentTarget.value);
     }
-    debugger;
     const pushDetailsOnServer = () => {
         let updateNoteVm = new UpdateNoteVm();
         updateNoteVm.id = props.noteDetails.id;
@@ -23,11 +22,12 @@ const NoteDetails = (props) => {
     }
     return (
         <div>
-            <div className={`${s.note} blue`}>
-                <textarea value={props.noteDetails.text} className={`${s.noteDetails} scroll`}
+            <div className={`${s.note} ${props.isFetching ? "priloader" : "blue"}`}>
+                <textarea value={props.noteDetails.text} className={`${s.noteDetails} scroll scroll_blue`}
                           onChange={updateDetailsTemp}
                           onBlur={pushDetailsOnServer}
                           disabled={props.noteDetails.isDisabled} />
+                <div>+</div>
             </div>
         </div>
     );

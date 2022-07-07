@@ -2,7 +2,6 @@
 
 
 const MatrixItem = (props) => {
-    debugger;
     const setActive = () => {
         props.setActive(props.index, true);
     }

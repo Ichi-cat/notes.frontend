@@ -26,7 +26,6 @@ const Note = (props) => {
             };
 
             noteApi.updateNote("1.0", updateNoteOptions, (error, data, response) => {
-                debugger;
                 props.editNoteName(props.id, props.currentCategory);
                 props.toggleNoteIsChanging(props.id, props.currentCategory, false);
             });
@@ -43,8 +42,8 @@ const Note = (props) => {
         {!props.isChanging ? <>
             <div className={s.item}>
                 <div className={s.text} onClick={openNote}>{props.name}</div>
-                <div onClick={toggleIsChanging}><img className={s.icon} src={pen}/></div>
-                <div onClick={deleteNote}><img className={s.icon} src={bucket} /></div>
+                <div onClick={toggleIsChanging}><img className="icon" src={pen}/></div>
+                <div onClick={deleteNote}><img className="icon" src={bucket} /></div>
             </div>
         </>
                 :
