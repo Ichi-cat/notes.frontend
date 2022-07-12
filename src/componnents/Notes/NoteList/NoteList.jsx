@@ -1,41 +1,23 @@
 import s from './NoteList.module.css'
 import Category from "./Category/Category";
 import EmptyCategory from "./EmptyCategory/EmptyCategory";
-import {categoryApi} from "../../../redux/apiClients";
-import {CreateCategoryVm} from "notesApiClient";
 
 const NoteList = (props) => {
     const createCategoryOnKeyPress = (e) => {
         if(e.charCode === 13){
-            let createCategoryVm = new CreateCategoryVm();
-            createCategoryVm.name = props.tempCategoryName;
-            let createCategoryOptions = {
-                body: createCategoryVm
-            };
-
-            categoryApi.createCategory("1.0", createCategoryOptions, (error, data, response) => {
-                props.updateCategoryNameTemp("");
-                props.setCategories(props.categories.concat(
-                    {
-                        id: response.body,
-                        name: props.tempCategoryName ? props.tempCategoryName : "No name",
-                        isActive: false,
-                        notes: []
-                    }
-                ))
-            });
+            props.createCategory(props.tempCategoryName);
         }
     };
     const updateCategoryNameOnInput = (e) => {
-        props.updateCategoryNameTemp(e.currentTarget.value);
+        props.updateCategoryTempName(e.currentTarget.value);
     }
     let categories = props.categories.map((category, id) => {
         return <Category category={category}
                          toggleIsCategoryFetching={props.toggleIsCategoryFetching}
-                         openNote={props.openNote}
+                         setNoteDetails={props.setNoteDetails}
                          toggleIsChanging={props.toggleIsChanging}
-                         updateCurrentCategoryNameTemp={props.updateCurrentCategoryNameTemp}
-                         editCategory={props.editCategory}
+                         updateCurrentCategoryNameTemp={props.updateCategoryTempNameById}
+                         editCategory={props.updateCategoryName}
                          activeNoteInput={props.activeNoteInput}
                          updateNoteTempName={props.updateNoteTempName}
                          addNote={props.addNote}
@@ -43,13 +25,17 @@ const NoteList = (props) => {
                          updateTempNoteName={props.updateTempNoteName}
                          editNoteName={props.editNoteName}
                          deleteNote={props.deleteNote}
-                         deleteCategory={props.deleteCategory}
                          key={id}
                          toggleDetailsIsDisabled={props.toggleDetailsIsDisabled}
                          isCategoryFetching={props.onDownloadCategoryIds.some(id => id === category.id)}
                          setCategoryNotes={props.setCategoryNotes}
                          activeCategories={props.activeCategories}
-                         setActive={props.setActive}
+                         setActive={props.setCategoryActive}
+                         updateCategory={props.updateCategory}
+                         deleteCategoryById={props.deleteCategoryById}
+
+                         openNote={props.openNote}
+                         fetchNotes={props.fetchNotes}
         />
     });
 

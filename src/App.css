@@ -260,3 +260,7 @@ main{
 .b_3 { transform-origin: left bottom; }
 
 .b_4 { transform-origin: right bottom; }
+
+input[type="color" i]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}

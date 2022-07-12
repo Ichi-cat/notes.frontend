@@ -1,6 +1,6 @@
 import s from './NoteDetails.module.css'
 import {UpdateNoteVm} from "notesApiClient";
-import {noteApi} from "../../../redux/apiClients";
+import {noteApi} from "../../../api/apiClients";
 
 
 const NoteDetails = (props) => {
@@ -15,10 +15,7 @@ const NoteDetails = (props) => {
         let options = {
             body: updateNoteVm
         };
-        noteApi.updateNote("1.0", options, (error, data, response) => {
-            console.log(props.noteDetails);
-            props.pushNoteDetails(props.noteDetails);
-        });
+        noteApi.updateNote("1.0", options, (error, data, response) => {});
     }
     return (
         <div>

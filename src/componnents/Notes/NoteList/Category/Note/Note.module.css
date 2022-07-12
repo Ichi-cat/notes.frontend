@@ -1,6 +1,7 @@
 .text{
     padding-left: 1em;
     text-align: left;
+    cursor: pointer;
 }
 
 .item{

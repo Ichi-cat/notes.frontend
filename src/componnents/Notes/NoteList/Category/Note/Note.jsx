@@ -1,13 +1,12 @@
 import s from './Note.module.css'
 import pen from '../../../../../img/pen.png'
 import bucket from '../../../../../img/bucket.png'
-import {UpdateCategoryVm, UpdateNoteVm} from "notesApiClient";
-import {categoryApi, noteApi} from "../../../../../redux/apiClients";
+import {UpdateNoteVm} from "notesApiClient";
+import {noteApi} from "../../../../../api/apiClients";
 
 const Note = (props) => {
     const openNote = () => {
-        props.toggleDetailsIsDisabled(false);
-        props.openNote(props.id, props.name, props.text, props.currentCategory);
+        props.openNote(props.id, props.currentCategory);
     }
     const toggleIsChanging = () => {
         props.toggleNoteIsChanging(props.id, props.currentCategory, true)

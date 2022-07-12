@@ -13,6 +13,7 @@ function App() {
       <div className="wrapper">
         <Header />
               <Routes>
+                  <Route path="/" element={<Home/>} />
                   <Route path="/home" element={<Home/>} />
                   <Route path="/notes" element={<Notes/>} />
                   <Route path="/matrix" element={<MatrixContainer/>} />
