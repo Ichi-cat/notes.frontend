@@ -54,7 +54,6 @@ let initialState = {
 };
 
 const notesReducer = (state = initialState, action) => {
-    window.state = state;
     switch (action.type){
         //toggle preloader
         case TOGGLE_IS_FETCHING:
@@ -146,7 +145,7 @@ const notesReducer = (state = initialState, action) => {
             return {
                 ...state,
                 categories: state.categories.map(category => {
-                    if(category.id === action.id) category.noteInputIsActive = true;
+                    if(category.id === action.id) category.noteInputIsActive = action.isActive;
                     return category;
                 })
             }
@@ -274,7 +273,7 @@ export const updateCategoryTempName = (newText) => ({type: UPDATE_NEW_CATEGORY_T
 export const toggleIsChanging = (id, isChanging) => ({type: TOGGLE_IS_CATEGORY_CHANGING, id: id, isChanging: isChanging});
 export const updateCategoryTempNameById = (id, newName) => ({type: UPDATE_CATEGORY_TEMP_NAME_BY_ID, id: id, newName: newName});
 export const updateCategoryName = (id) => ({type: UPDATE_CATEGORY_NAME, id: id});
-export const activeNoteInput = (id) => ({type: ACTIVE_NEW_NOTE_INPUT, id: id});
+export const activeNoteInput = (id, isActive) => ({type: ACTIVE_NEW_NOTE_INPUT, id: id, isActive});
 export const updateNoteTempName = (id, newName) => ({type: UPDATE_NEW_NOTE_TEMP_NAME, id: id, newName: newName});
 export const addNote = (id, noteId) => ({type: ADD_NOTE, id: id, noteId: noteId});
 

@@ -11,8 +11,10 @@ const Category = (props) => {
     }
 
     const editCategoryOnKeyPress = (e) => {
-        if(e.charCode === 13){
+        if(e.code === "Enter"){
             props.updateCategory(props.category.id, props.category.tempName);
+        } else if(e.code === "Escape"){
+            props.toggleIsChanging(props.category.id, false);
         }
     };
 
@@ -27,12 +29,14 @@ const Category = (props) => {
         if(!props.category.isActive) {
             props.fetchNotes(props.category.id);
         }
-        props.activeNoteInput(props.category.id);
+        props.activeNoteInput(props.category.id, true);
     }
 
     const addNoteOnClick = (e) => {
-        if(e.charCode === 13) {
+        if(e.code === "Enter") {
             props.addNoteToServer(props.category.noteTempName, props.category.id, "");
+        } else if(e.code === "Escape"){
+            props.activeNoteInput(props.category.id, false);
         }
     }
     const deleteCategory = () => {
@@ -52,11 +56,10 @@ const Category = (props) => {
                      deleteNoteFromServer={props.deleteNoteFromServer}
         />
     });
-    const colors = ["blue", "pink", "yellow", "green", "durk_pink", "durk_yellow", "durk_green"]
     return (
         <div className={s.category}>
-            <div className={colors[Math.floor(Math.random() * colors.length)]} onClick={() => {}}></div>
-            {!props.isCategoryFetching ? 
+            <div className="blue"></div>
+            {!props.isCategoryFetching ?
             <div className={s.plus}>
                 {!props.category.isChanging ? <>
                         <div className={s.text} onClick={() => {
@@ -75,7 +78,7 @@ const Category = (props) => {
                            placeholder="edit category"
                            onChange={updateCurrentCategoryNameOnInput}
                            autoFocus={true}
-                           onKeyPress={editCategoryOnKeyPress}/>
+                           onKeyDown={editCategoryOnKeyPress}/>
                 }
             </div> :
             <div class={s.plus_loader}>
@@ -93,7 +96,7 @@ const Category = (props) => {
                                placeholder="+add note"
                                onChange={updateNoteTempNameOnInput}
                                autoFocus={true}
-                               onKeyPress={addNoteOnClick}/>
+                               onKeyDown={addNoteOnClick}/>
                     : null}
                     {notes}
                 </div>
