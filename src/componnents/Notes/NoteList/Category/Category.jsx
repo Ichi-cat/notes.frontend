@@ -3,8 +3,6 @@ import plus from "../../../../img/plus.png";
 import pen from "../../../../img/pen.png";
 import bucket from "../../../../img/bucket.png";
 import Note from "./Note/Note";
-import {CreateNoteVm} from "notesApiClient";
-import {categoryApi, noteApi} from "../../../../api/apiClients";
 
 
 const Category = (props) => {
@@ -27,7 +25,6 @@ const Category = (props) => {
 
     const openNoteInput = () => {
         if(!props.category.isActive) {
-            debugger;
             props.fetchNotes(props.category.id);
         }
         props.activeNoteInput(props.category.id);
@@ -35,20 +32,11 @@ const Category = (props) => {
 
     const addNoteOnClick = (e) => {
         if(e.charCode === 13) {
-            let createNoteVm = new CreateNoteVm();
-            createNoteVm.name = props.category.noteTempName;
-            createNoteVm.text = "";
-            createNoteVm.categoryId = props.category.id;
-            let opts = {
-                body: createNoteVm
-            }
-            noteApi.createNote("1.0", opts, (error, data, response) => {
-                props.addNote(props.category.id, response.body);
-            });
+            props.addNoteToServer(props.category.noteTempName, props.category.id, "");
         }
     }
     const deleteCategory = () => {
-        props.deleteCategoryById(props.category.id);
+        props.deleteCategoryFromServer(props.category.id);
     }
     let notes = props.category.notes.map(note => {
         return <Note {...note}
@@ -60,6 +48,8 @@ const Category = (props) => {
                      deleteNote={props.deleteNote}
                      toggleDetailsIsDisabled={props.toggleDetailsIsDisabled}
                      openNote={props.openNote}
+                     updateNoteNameOnServer={props.updateNoteNameOnServer}
+                     deleteNoteFromServer={props.deleteNoteFromServer}
         />
     });
     const colors = ["blue", "pink", "yellow", "green", "durk_pink", "durk_yellow", "durk_green"]

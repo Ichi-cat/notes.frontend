@@ -1,8 +1,6 @@
 import s from './Note.module.css'
 import pen from '../../../../../img/pen.png'
 import bucket from '../../../../../img/bucket.png'
-import {UpdateNoteVm} from "notesApiClient";
-import {noteApi} from "../../../../../api/apiClients";
 
 const Note = (props) => {
     const openNote = () => {
@@ -16,25 +14,11 @@ const Note = (props) => {
     }
     const editNoteOnKeyPress = (e) => {
         if(e.keyCode === 13){
-            let updateNoteVm = new UpdateNoteVm();
-            updateNoteVm.id = props.id;
-            updateNoteVm.name = props.tempName;
-            updateNoteVm.text = props.text;
-            let updateNoteOptions = {
-                body: updateNoteVm
-            };
-
-            noteApi.updateNote("1.0", updateNoteOptions, (error, data, response) => {
-                props.editNoteName(props.id, props.currentCategory);
-                props.toggleNoteIsChanging(props.id, props.currentCategory, false);
-            });
+            props.updateNoteNameOnServer(props.id, props.tempName, props.text, props.currentCategory);
         }
     };
-
     const deleteNote = () => {
-        noteApi.deleteNote(props.id, "1.0", (error, data, response) => {
-            props.deleteNote(props.id, props.currentCategory);
-        });
+        props.deleteNoteFromServer(props.id, props.currentCategory);
     }
     return (
         <>

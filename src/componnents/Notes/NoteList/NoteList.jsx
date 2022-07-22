@@ -32,10 +32,13 @@ const NoteList = (props) => {
                          activeCategories={props.activeCategories}
                          setActive={props.setCategoryActive}
                          updateCategory={props.updateCategory}
-                         deleteCategoryById={props.deleteCategoryById}
+                         deleteCategoryFromServer={props.deleteCategoryFromServer}
 
                          openNote={props.openNote}
                          fetchNotes={props.fetchNotes}
+                         addNoteToServer={props.addNoteToServer}
+                         updateNoteNameOnServer={props.updateNoteNameOnServer}
+                         deleteNoteFromServer={props.deleteNoteFromServer}
         />
     });
 

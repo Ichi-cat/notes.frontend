@@ -1,5 +1,3 @@
-import {categoryApi} from "../api/apiClients";
-import {CreateCategoryVm} from "notesApiClient";
 import {categoryAPI, noteAPI} from "../api/api";
 
 
@@ -263,7 +261,7 @@ const notesReducer = (state = initialState, action) => {
 //get category and her notes from the server
 export const setCategories = (categories) => ({type: SET_CATEGORIES, categories: categories })
 //creates action to synchronize noteDetails text
-export const updateNoteTempActionCreator = (newText) => ({type: UPDATE_NOTE_TEMP, newText: newText })
+export const updateTempNoteDetails = (newText) => ({type: UPDATE_NOTE_TEMP, newText: newText })
 //toggle is fetching(true or false, for preloader)
 export const toggleIsFetching = (isFetching) => ({type: TOGGLE_IS_FETCHING, isFetching })
 //set category with pointed id is active(unboxing)
@@ -288,13 +286,25 @@ export const deleteNote = (id, categoryId) => ({type: DELETE_NOTE, id: id, categ
 export const deleteCategory = (id) => ({type: DELETE_CATEGORY, id: id});
 export const toggleDetailsIsDisabled = (isDisabled) => ({type: TOGGLE_IS_DETAILS_DISABLED, isDisabled});
 export const setCategoryNotes = (id, notes) => ({type: SET_CATEGORY_NOTES, id, notes});
-export const setDefaultDetailsActionCreator = () => ({type: SET_DEFAULT_DETAILS});
+export const setDefaultDetails = () => ({type: SET_DEFAULT_DETAILS});
 
 //category
 export const addCategoryActionCreator = (category) => ({type: ADD_CATEGORY, category});
 
 
 //thunks
+export const getCategoriesFromServer = () => {
+    return (dispatch)  => {
+        dispatch(toggleIsFetching(true));
+        dispatch(setCategories([]));
+        categoryAPI.getCategories().then(data => {
+            dispatch(setCategories(data.categories.map(category => {
+                return {...category, tempName: category.name, noteTempName: "", isActive: false, isChanging: false, notes: []}
+            })));
+            dispatch(toggleIsFetching(false));
+        });
+    }
+};
 export const createCategory = (name) => {
     return (dispatch) => {
         dispatch(updateCategoryTempName(""));
@@ -307,7 +317,7 @@ export const createCategory = (name) => {
             }));
         });
     }
-}
+};
 export const updateCategory = (id, newName)  => {
     return (dispatch) => {
         categoryAPI.updateCategory(id, newName).then(data => {
@@ -315,14 +325,14 @@ export const updateCategory = (id, newName)  => {
             dispatch(toggleIsChanging(id, false));
         });
     }
-}
-export const deleteCategoryById = (id) => {
+};
+export const deleteCategoryFromServer = (id) => {
     return (dispatch) => {
         categoryAPI.deleteCategory(id).then(data => {
             dispatch(deleteCategory(id));
         });
     }
-}
+};
 export const openNote = (id, currentCategory) => {
     return (dispatch) => {
         dispatch(toggleDetailsIsDisabled(false));
@@ -330,7 +340,7 @@ export const openNote = (id, currentCategory) => {
             dispatch(setNoteDetails(id, currentCategory, data.name, data.text));
         });
     }
-}
+};
 export const fetchNotes = (categoryId) => {
     return (dispatch) => {
         dispatch(toggleIsCategoryFetching(true, categoryId));
@@ -340,7 +350,34 @@ export const fetchNotes = (categoryId) => {
             dispatch(setCategoryActive(categoryId));
         });
     }
+};
+export const addNoteToServer = (name, categoryId, text="") => {
+    return (dispatch) => {
+        noteAPI.addNote(name, categoryId, text).then(data => {
+            dispatch(addNote(categoryId, data));
+        });
+    }
+};
+export const updateNoteNameOnServer = (id, name, text, currentCategory) => {
+    return (dispatch) => {
+        noteAPI.updateNote(id, name, text).then(data => {
+            dispatch(editNoteName(id, currentCategory));
+            dispatch(toggleNoteIsChanging(id, currentCategory, false));
+        });
+    }
+};
+export const updateNoteOnServer = (id, name, text) => {
+    return (dispatch) => {
+        noteAPI.updateNote(id, name, text).then(data => {});
+    }
 }
+export const deleteNoteFromServer = (id, currentCategory) => {
+    return (dispatch) => {
+        noteAPI.deleteNote(id).then(data => {
+            dispatch(deleteNote(id, currentCategory));
+        });
+    };
+};
 
 
 export default notesReducer;

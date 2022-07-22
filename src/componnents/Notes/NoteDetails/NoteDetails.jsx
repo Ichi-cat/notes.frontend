@@ -1,21 +1,12 @@
 import s from './NoteDetails.module.css'
-import {UpdateNoteVm} from "notesApiClient";
-import {noteApi} from "../../../api/apiClients";
 
 
 const NoteDetails = (props) => {
     const updateDetailsTemp = (e) => {
-        props.updateNoteDetails(e.currentTarget.value);
+        props.updateTempNoteDetails(e.currentTarget.value);
     }
     const pushDetailsOnServer = () => {
-        let updateNoteVm = new UpdateNoteVm();
-        updateNoteVm.id = props.noteDetails.id;
-        updateNoteVm.name = props.noteDetails.name;
-        updateNoteVm.text = props.noteDetails.text;
-        let options = {
-            body: updateNoteVm
-        };
-        noteApi.updateNote("1.0", options, (error, data, response) => {});
+        props.updateNoteOnServer(props.noteDetails.id, props.noteDetails.name,props.noteDetails.text);
     }
     return (
         <div>

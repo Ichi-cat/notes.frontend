@@ -1,7 +1,7 @@
 import React from "react";
 import {
-    pushNoteDetailsActiveCreator, setDefaultDetailsActionCreator,
-    updateNoteTempActionCreator
+    setDefaultDetails, updateNoteOnServer,
+    updateTempNoteDetails
 } from "../../../redux/notes-reducer";
 import {connect} from "react-redux";
 import NoteDetails from "./NoteDetails";
@@ -15,22 +15,16 @@ const mapStateToProps = (state) => {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return{
-        updateNoteDetails: (text) => {
-            dispatch(updateNoteTempActionCreator(text));
-        },
-        setDefaultDetails: () => {
-            dispatch(setDefaultDetailsActionCreator());
-        }
-    }
-}
+const mapDispatchToProps = {
+    updateTempNoteDetails,
+    setDefaultDetails,
+    updateNoteOnServer
+};
 
 
 class NoteDetailsContainer extends React.Component{
     componentDidMount() {
         this.props.setDefaultDetails();
-        // categoryApi.createCategory("1.0", {body: new CreateCategoryVm()},(error, data, response) => this.props.addCategory(response));
     }
 
     render(){

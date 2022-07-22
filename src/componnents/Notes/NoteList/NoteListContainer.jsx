@@ -1,10 +1,10 @@
 import React from "react";
 import {
     activeNoteInput,
-    addNote, createCategory,
-    deleteCategoryById,
-    deleteNote,
-    editNoteName, fetchNotes, openNote,
+    addNote, addNoteToServer, createCategory,
+    deleteCategoryFromServer,
+    deleteNote, deleteNoteFromServer,
+    editNoteName, fetchNotes, getCategoriesFromServer, openNote,
     setCategories,
     setCategoryActive,
     setCategoryNotes,
@@ -15,13 +15,12 @@ import {
     toggleIsFetching,
     toggleNoteIsChanging, updateCategory,
     updateCategoryName,
-    updateCategoryTempName, updateCategoryTempNameById,
+    updateCategoryTempName, updateCategoryTempNameById, updateNoteNameOnServer,
     updateNoteTempName,
     updateTempNoteName
 } from "../../../redux/notes-reducer";
 import {connect} from "react-redux";
 import NoteList from "./NoteList";
-import {categoryApi} from "../../../api/apiClients";
 
 
 
@@ -55,30 +54,24 @@ const mapDispatchToProps = {
         toggleDetailsIsDisabled,
         setCategoryNotes,
         setCategoryActive,
-        deleteCategoryById,
+        deleteCategoryFromServer,
 
+        getCategoriesFromServer,
         createCategory,
         updateCategory,
         openNote,
-        fetchNotes
+        fetchNotes,
+        addNoteToServer,
+        updateNoteNameOnServer,
+        deleteNoteFromServer
     };
 
 
 class NoteListContainer extends React.Component{
     componentDidMount() {
         //send request to get notes
-        this.props.toggleIsFetching(true);
-        this.props.setCategories([]);
-        categoryApi.getCategories("1.0", this.onCategoryDownload.bind(this));
-
+        this.props.getCategoriesFromServer();
     }
-    onCategoryDownload(error, data, _){
-        //get all categories and send request for notes to every category
-        this.props.setCategories(data.categories.map(category => {
-            return {...category, tempName: category.name, noteTempName: "", isActive: false, isChanging: false, notes: []}
-        }));
-        this.props.toggleIsFetching(false);
-        }
     render(){
         return (
             <>
