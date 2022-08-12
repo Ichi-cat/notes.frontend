@@ -6,10 +6,11 @@
 }
 
 .square{
-    min-height: 400px;
+    height: 450px;
     grid-template-columns: 1fr;
     grid-row-gap: 3em;
-    color: #090021;
+    color: #fff;
     text-align: left;
     padding: 1em;
+    overflow-y: scroll;
 }

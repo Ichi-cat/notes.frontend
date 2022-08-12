@@ -1,0 +1,21 @@
+.team{
+    padding-left: 5px;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: calc(100% - 40px) 20px 20px;
+    border-left: 2px solid white;
+}
+
+.point {
+    display: block;
+    cursor: pointer;
+    transition: color 0.5s linear;
+}
+
+.point:hover{
+    color: #0059ff;
+}
+
+.point:hover:after{
+    display: block;
+}

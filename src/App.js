@@ -1,11 +1,10 @@
-import logo from './logo.svg';
 import './App.css';
 import Header from './componnents/Header/Header';
 import Home from './componnents/Content/Home'
 import {Route, Routes} from "react-router-dom";
 import Notes from "./componnents/Notes/Notes";
-import Progress from "./componnents/Progress/Progress";
 import MatrixContainer from "./componnents/Matrix/MatrixContainer";
+import ProgressContainer from "./componnents/Progress/ProgressContainer";
 
 function App() {
   return (
@@ -17,7 +16,7 @@ function App() {
                   <Route path="/home" element={<Home/>} />
                   <Route path="/notes" element={<Notes/>} />
                   <Route path="/matrix" element={<MatrixContainer/>} />
-                  <Route path="/progress" element={<Progress/>} />
+                  <Route path="/progress" element={<ProgressContainer/>} />
               </Routes>
       </div>
     </div>

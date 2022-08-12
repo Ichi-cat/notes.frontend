@@ -2,7 +2,42 @@
     display: grid;
     grid-template-columns: calc(100% - 25px) 25px;
     grid-column-gap: 1em;
-    border-bottom: 1px solid #05101E;
+    border-left: 2px solid #fff;
+    margin-bottom: 10px;
+    padding-left: 5px;
+}
+
+.str_text{
+    display: block;
+    transition: color 0.5s linear;
+}
+
+.str_text:hover{
+    color: #3c0057;
+}
+
+.str_text:hover:after{
+    display: block;
+}
+
+
+
+.max{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 85px;
+    height: 20px;
+    padding: 3px;
+    position: relative;
+    right: 75px;
+    bottom: 25px;
+    background: rgba(255, 255, 255, 0.56);
+    border-radius: 3px;
+}
+
+.calendar {
+    background: none;
+    border: none;
 }
 
 .icon_timer{

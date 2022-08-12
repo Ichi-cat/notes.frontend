@@ -4,5 +4,41 @@
     padding: 15px;
     overflow-y: scroll;
     /*transition: transform .15s;*/
+}
 
+.matrix_add {
+    display: block;
+    background: none;
+    color:  white;
+    text-align: left;
+    border: 2px solid white;
+    border-radius: 5px;
+    width: 50%;
+    margin-left: 20px;
+    cursor: pointer;
+    transition: color 0.5s linear, border 0.5s linear, width 0.5s linear;
+}
+
+.matrix_add:hover{
+    border: 2px solid #fbdd8a;
+    width: 70%;
+}
+
+.matrix_add:hover:after{
+    display: block;
+}
+
+.noteTaskDetails{
+    background: none;
+    border: none;
+    width: 100%;
+    height: 100%;
+    resize: none;
+}
+
+.pri_point {
+    height: 30px;
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 5px;
 }

@@ -1,4 +1,4 @@
-import {ApiClient, CategoryApi, NoteApi} from "notesApiClient";
+import {ApiClient, CategoryApi, NoteApi, NoteTaskApi} from "notes";
 
 
 const apiClient = new ApiClient()
@@ -12,3 +12,4 @@ apiClient.authentications = {
 
 export const noteApi = new NoteApi(apiClient);
 export const categoryApi = new CategoryApi(apiClient);
+export const noteTaskApi = new NoteTaskApi(apiClient);

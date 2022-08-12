@@ -156,6 +156,7 @@ main{
   font-size: 10px;
   background: rgba(0, 0, 0, 0.63);
   border-radius: 5px;
+  position: relative;
 }
 
 /*priloader gradient*/
@@ -263,4 +264,27 @@ main{
 
 input[type="color" i]::-webkit-color-swatch-wrapper {
   padding: 0;
+}
+
+.button {
+  display: block;
+  background: none;
+  color: #ccc;
+  text-align: left;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  width: 50%;
+  height: 30px;
+  margin-left: 20px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  cursor: pointer;
+  transition: color 0.5s linear, border 0.5s linear, width 0.5s linear;
+}
+
+.pri_point {
+  height: 30px;
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 5px;
 }
