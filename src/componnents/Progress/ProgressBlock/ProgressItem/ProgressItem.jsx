@@ -81,7 +81,7 @@ const ProgressItem = (props) => {
     return (
         <div className={s.str} ref={drag}>
             {!props.item.isEditing ? <>
-                <div className={s.str_text}>{time.time}</div>
+                <div className={s.str_text}>{props.item.name}</div>
                 <div>
                     <img className="icon" src={point} onClick={toggleIsContextMenuOpenedOnClick}/>
                     {props.item.isContextMenuOpened ?
@@ -103,22 +103,26 @@ const ProgressItem = (props) => {
                     }
 
                 </div>
-                {props.item._date ?
+                {(props.item._date || props.item.seconds) &&
                     <div className="up_left">
-                        <div className="left">{props.item._date.toLocaleString('en-US',
-                            {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            })}
-                        </div>
-                        <div className="left">{props.item._date.toLocaleString('en-US',
-                            {
-                                hour: 'numeric',
-                                minute: 'numeric'
-                            })}</div>
+                        {props.item._date &&
+                            <>
+                                <div className="left">{props.item._date.toLocaleString('en-US',
+                                    {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                    })}
+                                </div>
+                                <div className="left">{props.item._date.toLocaleString('en-US',
+                                    {
+                                        hour: 'numeric',
+                                        minute: 'numeric'
+                                    })}</div>
+                            </>
+                        }
+                        {props.item.seconds && <div className="left">{props.item.seconds}</div>}
                     </div>
-                    : null
                 }
             </> : <input className='button' type="text"
                          value={props.item.tempName}

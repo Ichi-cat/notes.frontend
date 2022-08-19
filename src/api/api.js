@@ -1,15 +1,26 @@
 import {
     CreateCategoryVm,
     CreateNoteTaskVm,
-    CreateNoteVm,
+    CreateNoteVm, Operation,
     UpdateCategoryVm,
     UpdateNoteTaskVm,
     UpdateNoteVm
 } from "notes";
-import {categoryApi, noteApi, noteTaskApi} from "./apiClients";
+import {apiClient, categoryApi, noteApi, noteTaskApi} from "./apiClients";
 import {createNoteTaskOnServer} from "../redux/matrix-reducer";
+import axios from "axios";
+import * as querystring from "querystring";
+import qs from 'qs'
 
-const apiVersion = "1.0"
+const apiVersion = "1.0";
+const clientId = "C7B53111-019B-4781-AFFF-71B6F6B0D277";
+const grantType = "authorization_code";
+const redirectAuthUri = "http://localhost:3000/oauth-callback";
+
+const authInstance = axios.create({
+    baseURL: 'https://localhost:5001/',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}
+});
 
 
 
@@ -20,9 +31,10 @@ export const categoryAPI = {
         });
         return promise;
     },
-    createCategory(name = ""){
+    createCategory(name = "", color){
         let createCategoryVm = new CreateCategoryVm();
         createCategoryVm.name = name;
+        createCategoryVm.color = color;
         let createCategoryOptions = {
             body: createCategoryVm
         };
@@ -31,10 +43,11 @@ export const categoryAPI = {
         });
         return promise;
     },
-    updateCategory(id, newName){
+    updateCategory(id, newName, newColor){
         let updateCategoryVm = new UpdateCategoryVm();
         updateCategoryVm.id = id;
         updateCategoryVm.name = newName;
+        updateCategoryVm.color = newColor;
         let updateCategoryOptions = {
             body: updateCategoryVm
         };
@@ -81,11 +94,18 @@ export const noteAPI = {
         updateNoteVm.id = id;
         updateNoteVm.name = name;
         updateNoteVm.text = text;
-        let updateNoteOptions = {
-            body: updateNoteVm
-        };
         const promise  = new Promise((resolve, reject) => {
-            noteApi.updateNote(apiVersion, updateNoteOptions, (error, data, _) => {resolve(data)});
+            noteApi.updateNote(apiVersion, {body: updateNoteVm}, (error, data, _) => {resolve(data)});
+        });
+        return promise;
+    },
+    updateNotePatch(id, name, value) {
+        let updateNotePatchVm = new Operation();
+        updateNotePatchVm.op = 'replace';
+        updateNotePatchVm.path = name;
+        updateNotePatchVm.value = value;
+        const promise  = new Promise((resolve, reject) => {
+            noteApi.updateNotePatch(id, apiVersion, {body: [updateNotePatchVm]}, (error, data, _) => {resolve(data)});
         });
         return promise;
     },
@@ -222,6 +242,18 @@ export const noteTaskAPI = {
             });
             return promise;
     },
+    updateNoteTaskPatch(id, name, value){
+        let updateNoteTaskPatchVm = new Operation();
+        updateNoteTaskPatchVm.op = 'replace';
+        updateNoteTaskPatchVm.path = name;
+        updateNoteTaskPatchVm.value = value;
+        const promise = new Promise((resolve, reject) => {
+            noteTaskApi.updateNoteTaskPatch(id, apiVersion, {body: [updateNoteTaskPatchVm]}, (error, data, _) => {
+                resolve(data);
+            });
+        });
+        return promise;
+    },
     deleteNoteTaskById(id){
         const promise = new Promise((resolve, reject) => {
             noteTaskApi.deleteNoteTask(id, apiVersion, (error, data, _) => {resolve(data)});
@@ -229,3 +261,33 @@ export const noteTaskAPI = {
         return promise;
     }
 };
+
+export const authAPI = {
+    getToken(code){
+        let details = {
+            'client_id': clientId,
+            'code': code,
+            'grant_type': grantType,
+            'redirect_uri': redirectAuthUri
+        };
+        let formData = new FormData();
+        formData.append('client_id', clientId);
+        formData.append('code', code);
+        formData.append('grant_type', grantType);
+        formData.append('redirect_uri', redirectAuthUri);
+        let formBody = qs.stringify(details);
+        return authInstance.post(`connect/token`, formBody, {headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }})
+            .then(res => res.data)
+            },
+        onFailure: response => console.error(response)
+};
+
+const toQuery = (details) => {
+    let formBody = [];
+    for (let property in details) {
+        let encodedKey = encodeURIComponent(property);
+        let encodedValue = encodeURIComponent(details[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+    }
+    return formBody.join("&");
+}

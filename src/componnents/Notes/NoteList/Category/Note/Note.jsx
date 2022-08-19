@@ -3,22 +3,23 @@ import pen from '../../../../../img/pen.png'
 import bucket from '../../../../../img/bucket.png'
 
 const Note = (props) => {
+    debugger
     const openNote = () => {
         props.openNote(props.id, props.currentCategory);
     }
     const toggleIsChanging = () => {
-        props.toggleNoteIsChanging(props.id, props.currentCategory, true)
+        props.toggleNoteIsChanging(props.id, props.currentCategory.id, true)
     }
     const updateTempNoteName = (e) => {
-        props.updateTempNoteName(props.id, props.currentCategory, e.currentTarget.value);
+        props.updateTempNoteName(props.id, props.currentCategory.id, e.currentTarget.value);
     }
     const editNoteOnKeyPress = (e) => {
         if(e.keyCode === 13){
-            props.updateNoteNameOnServer(props.id, props.tempName, props.text, props.currentCategory);
+            props.updateNoteNameOnServer(props.id, props.tempName, props.currentCategory.id);
         }
     };
     const deleteNote = () => {
-        props.deleteNoteFromServer(props.id, props.currentCategory);
+        props.deleteNoteFromServer(props.id, props.currentCategory.id);
     }
     return (
         <>

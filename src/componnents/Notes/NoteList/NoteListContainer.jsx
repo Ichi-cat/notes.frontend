@@ -13,8 +13,8 @@ import {
     toggleIsCategoryFetching,
     toggleIsChanging,
     toggleIsFetching,
-    toggleNoteIsChanging, updateCategory,
-    updateCategoryName,
+    toggleNoteIsChanging, updateCategoryOnServer,
+
     updateCategoryTempName, updateCategoryTempNameById, updateNoteNameOnServer,
     updateNoteTempName,
     updateTempNoteName
@@ -43,7 +43,7 @@ const mapDispatchToProps = {
         updateCategoryTempName,
         toggleIsChanging,
         updateCategoryTempNameById,
-        updateCategoryName,
+
         activeNoteInput,
         updateNoteTempName,
         addNote,
@@ -58,7 +58,7 @@ const mapDispatchToProps = {
 
         getCategoriesFromServer,
         createCategory,
-        updateCategory,
+        updateCategory: updateCategoryOnServer,
         openNote,
         fetchNotes,
         addNoteToServer,

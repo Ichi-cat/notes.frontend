@@ -10,7 +10,7 @@ const NoteDetails = (props) => {
     }
     return (
         <div>
-            <div className={`${s.note} ${props.isFetching ? "priloader" : "blue"}`}>
+            <div className={`${s.note} ${props.isFetching ? "priloader" : props.noteDetails.currentCategory.color || 'blue'}`}>
                 <textarea value={props.noteDetails.text} className={`${s.noteDetails} scroll scroll_blue`}
                           onChange={updateDetailsTemp}
                           onBlur={pushDetailsOnServer}

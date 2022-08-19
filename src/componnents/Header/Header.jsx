@@ -1,5 +1,6 @@
 import s from './Header.module.css'
 import {NavLink, Route, Router, Routes} from "react-router-dom";
+import LoginButton from "./LoginButton";
 
 const Header = () => {
     return (
@@ -11,8 +12,7 @@ const Header = () => {
                     <NavLink className={s.nav_link} to="/notes">notes</NavLink>
                     <NavLink className={s.nav_link} to="/matrix">matrix</NavLink>
                     <NavLink className={s.nav_link} to="/progress">progress</NavLink>
-                    <NavLink className={s.nav_link} to="/statistic">Statistics</NavLink>
-                    <NavLink className={s.nav_link} to="/registration">Login</NavLink>
+                    <LoginButton className={s.nav_link}/>
                 </div>
             </div>
     </header>

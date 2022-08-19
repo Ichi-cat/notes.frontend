@@ -59,6 +59,18 @@ main{
 
 .green{background: linear-gradient(180deg, #7ED957, #0b8600);}
 
+.red{background: linear-gradient(180deg, #fc7e00, #ff0000);}
+
+.brown{background: linear-gradient(180deg, #520202, #00072f);}
+
+.pea{background: linear-gradient(180deg, #FACE1E, #40b011);}
+
+.teal{background: linear-gradient(180deg, #0b8600, #0f429f);}
+
+.indigo{background: linear-gradient(180deg, #0350c4, #a00bb6);}
+
+.lavender{background: linear-gradient(180deg, #ff00fa, #00a6ff);}
+
 .durk_pink{background-color: #702051;}
 
 .durk_yellow{background-color: #6B5709;}
@@ -99,6 +111,30 @@ main{
 
 .scroll_green::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #0b8600, #7ED957);
+}
+
+.scroll_red::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, #ff0000, #fc7e00);
+}
+
+.scroll_brown::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, #00072f, #520202);
+}
+
+.scroll_pea::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, #40b011, #FACE1E);
+}
+
+.scroll_teal::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, #0f429f, #0b8600);
+}
+
+.scroll_indigo::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, #a00bb6, #0350c4);
+}
+
+.scroll_lavender::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, #00a6ff, #ff00fa);
 }
 
 /*Blocks animation*/

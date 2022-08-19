@@ -20,7 +20,7 @@ const SET_CATEGORY_NOTES = "SET_CATEGORY_NOTES";
 const SET_CATEGORIES = "SET_CATEGORIES";
 const ADD_CATEGORY = "ADD_CATEGORY";
 const TOGGLE_CATEGORY_FETCHING = "TOGGLE_CATEGORY_FETCHING";
-const UPDATE_CATEGORY_NAME = "UPDATE_CATEGORY_NAME";
+const UPDATE_CATEGORY = "UPDATE_CATEGORY";
 const UPDATE_NEW_CATEGORY_TEMP_NAME = "UPDATE_NEW_CATEGORY_TEMP_NAME";
 const TOGGLE_IS_CATEGORY_CHANGING = "TOGGLE_IS_CATEGORY_CHANGING";
 const UPDATE_CATEGORY_TEMP_NAME_BY_ID = "UPDATE_CATEGORY_TEMP_NAME_BY_ID";
@@ -132,9 +132,12 @@ const notesReducer = (state = initialState, action) => {
                 categories: updatedCategoriesTempName
             }
         //local  updating category's name
-        case UPDATE_CATEGORY_NAME:
+        case UPDATE_CATEGORY:
             let updatedCategory = state.categories.map(category => {
-                if(category.id === action.id) category.name = category.tempName;
+                if(category.id === action.id) {
+                    category.name = category.tempName;
+                    category.color = action.color;
+                }
                 return category;
             });
             return {
@@ -272,7 +275,7 @@ export const setNoteDetails = (id, currentCategory, name, text) => ({type: SET_N
 export const updateCategoryTempName = (newText) => ({type: UPDATE_NEW_CATEGORY_TEMP_NAME, newText: newText});
 export const toggleIsChanging = (id, isChanging) => ({type: TOGGLE_IS_CATEGORY_CHANGING, id: id, isChanging: isChanging});
 export const updateCategoryTempNameById = (id, newName) => ({type: UPDATE_CATEGORY_TEMP_NAME_BY_ID, id: id, newName: newName});
-export const updateCategoryName = (id) => ({type: UPDATE_CATEGORY_NAME, id: id});
+export const updateCategory = (id, color) => ({type: UPDATE_CATEGORY, id, color});
 export const activeNoteInput = (id, isActive) => ({type: ACTIVE_NEW_NOTE_INPUT, id: id, isActive});
 export const updateNoteTempName = (id, newName) => ({type: UPDATE_NEW_NOTE_TEMP_NAME, id: id, newName: newName});
 export const addNote = (id, noteId) => ({type: ADD_NOTE, id: id, noteId: noteId});
@@ -304,23 +307,27 @@ export const getCategoriesFromServer = () => {
         });
     }
 };
-export const createCategory = (name) => {
+export const createCategory = (name, color) => {
     return (dispatch) => {
         dispatch(updateCategoryTempName(""));
-        categoryAPI.createCategory(name).then(data => {
+        categoryAPI.createCategory(name, color).then(data => {
             dispatch(addCategoryActionCreator({
                 id: data,
                 name: name ? name : "No name",
+                tempName: name,
+                noteTempName: "",
                 isActive: false,
-                notes: []
+                isChanging: false,
+                notes: [],
+                color: color
             }));
         });
     }
 };
-export const updateCategory = (id, newName)  => {
+export const updateCategoryOnServer = (id, newName, color)  => {
     return (dispatch) => {
-        categoryAPI.updateCategory(id, newName).then(data => {
-            dispatch(updateCategoryName(id));
+        categoryAPI.updateCategory(id, newName, color).then(data => {
+            dispatch(updateCategory(id, color));
             dispatch(toggleIsChanging(id, false));
         });
     }
@@ -357,9 +364,9 @@ export const addNoteToServer = (name, categoryId, text="") => {
         });
     }
 };
-export const updateNoteNameOnServer = (id, name, text, currentCategory) => {
+export const updateNoteNameOnServer = (id, name, currentCategory) => {
     return (dispatch) => {
-        noteAPI.updateNote(id, name, text).then(data => {
+        noteAPI.updateNotePatch(id, 'name', name).then(data => {
             dispatch(editNoteName(id, currentCategory));
             dispatch(toggleNoteIsChanging(id, currentCategory, false));
         });

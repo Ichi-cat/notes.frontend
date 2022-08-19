@@ -1,11 +1,15 @@
 import s from './NoteList.module.css'
 import Category from "./Category/Category";
 import EmptyCategory from "./EmptyCategory/EmptyCategory";
+import ColorModule from "./ColorModule/ColorModule";
+import {useState} from "react";
 
 const NoteList = (props) => {
+    const [newCategoryColor, setNewCategoryColor] = useState('blue');
+
     const createCategoryOnKeyPress = (e) => {
         if(e.charCode === 13){
-            props.createCategory(props.tempCategoryName);
+            props.createCategory(props.tempCategoryName, newCategoryColor);
         }
     };
     const updateCategoryNameOnInput = (e) => {
@@ -17,7 +21,6 @@ const NoteList = (props) => {
                          setNoteDetails={props.setNoteDetails}
                          toggleIsChanging={props.toggleIsChanging}
                          updateCurrentCategoryNameTemp={props.updateCategoryTempNameById}
-                         editCategory={props.updateCategoryName}
                          activeNoteInput={props.activeNoteInput}
                          updateNoteTempName={props.updateNoteTempName}
                          addNote={props.addNote}
@@ -56,12 +59,13 @@ const NoteList = (props) => {
                 </> : 
                 <>
                 {categories}
-                    <div>
+                    <div className={s.pre_button}>
                         <input className={s.button}
                                 value={props.tempCategoryName}
                                 placeholder="+ add category"
                                 onKeyPress={createCategoryOnKeyPress}
                                 onChange={updateCategoryNameOnInput} />
+                        <ColorModule chosenColor={newCategoryColor} setColor={setNewCategoryColor}/>
                     </div>
                 </>
                 }

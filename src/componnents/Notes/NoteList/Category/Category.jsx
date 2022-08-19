@@ -3,16 +3,19 @@ import plus from "../../../../img/plus.png";
 import pen from "../../../../img/pen.png";
 import bucket from "../../../../img/bucket.png";
 import Note from "./Note/Note";
+import ColorModule from "../ColorModule/ColorModule";
+import {useState} from "react";
 
 
 const Category = (props) => {
+    const[color, setColor] = useState('blue');
     const toggleIsChanging = () => {
         props.toggleIsChanging(props.category.id, true);
     }
 
     const editCategoryOnKeyPress = (e) => {
         if(e.code === "Enter"){
-            props.updateCategory(props.category.id, props.category.tempName);
+            props.updateCategory(props.category.id, props.category.tempName, color);
         } else if(e.code === "Escape"){
             props.toggleIsChanging(props.category.id, false);
         }
@@ -44,7 +47,8 @@ const Category = (props) => {
     }
     let notes = props.category.notes.map(note => {
         return <Note {...note}
-                     currentCategory={props.category.id}
+                     key={note.id}
+                     currentCategory={props.category}
                      setNoteDetails={props.setNoteDetails}
                      toggleNoteIsChanging={props.toggleNoteIsChanging}
                      updateTempNoteName={props.updateTempNoteName}
@@ -58,7 +62,7 @@ const Category = (props) => {
     });
     return (
         <div className={s.category}>
-            <div className="blue"></div>
+            <div className={props.category.color || 'blue'}></div>
             {!props.isCategoryFetching ?
             <div className={s.plus}>
                 {!props.category.isChanging ? <>
@@ -73,15 +77,19 @@ const Category = (props) => {
                         <div><img className="icon" src={bucket} onClick={deleteCategory}/></div>
                     </>
                     :
-                    <input className={s.button}
+                    <>
+                        <input className={s.button}
                            value={props.category.tempName}
                            placeholder="edit category"
                            onChange={updateCurrentCategoryNameOnInput}
                            autoFocus={true}
                            onKeyDown={editCategoryOnKeyPress}/>
+                        <ColorModule key={props.key} chosenColor={color} setColor={setColor}/>
+
+                    </>
                 }
             </div> :
-            <div class={s.plus_loader}>
+            <div className={s.plus_loader}>
                 <div className={s.text}>{props.category.name}</div>
                 <div className="loader-1"></div>
             </div>

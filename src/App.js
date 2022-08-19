@@ -5,6 +5,7 @@ import {Route, Routes} from "react-router-dom";
 import Notes from "./componnents/Notes/Notes";
 import MatrixContainer from "./componnents/Matrix/MatrixContainer";
 import ProgressContainer from "./componnents/Progress/ProgressContainer";
+import Login from "./componnents/Login/Login";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
                   <Route path="/notes" element={<Notes/>} />
                   <Route path="/matrix" element={<MatrixContainer/>} />
                   <Route path="/progress" element={<ProgressContainer/>} />
+                  <Route path="/login" element={<Login/>} />
               </Routes>
       </div>
     </div>

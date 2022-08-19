@@ -1,12 +1,5 @@
 import MatrixItem from "./MatrixItem/MatrixItem";
 import s from './MatrixBlock.module.css'
-import {
-    createNoteTaskOnServer,
-    deleteNoteTaskOnServer,
-    editTaskTempName, openNoteTask,
-    toggleIsTaskEditing,
-    updateTaskNameOnServer
-} from "../../../redux/matrix-reducer";
 
 
 const MatrixBlock = (props) => {

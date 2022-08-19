@@ -6,6 +6,9 @@
     overflow-y: auto;
 }
 
+.pre_button{display: grid;
+    grid-template-columns: calc(100% - 20px) 10px;
+}
 /*.category{*/
 /*    display: grid;*/
 /*    grid-template-columns: 10px calc(100% - 20px);*/

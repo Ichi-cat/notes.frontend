@@ -62,7 +62,7 @@ const progressReducer = (state=initialState, action) => {
                 ...state,
                 columns: state.columns.map((column) => {
                     if(column.id === action.id) column.tasks = action.tasks.map(task =>
-                        ({...task, tempName: task.name, isEditing: false, isContextMenuOpened: false, seconds: 0}));
+                        ({...task, tempName: task.name, isEditing: false, isContextMenuOpened: false}));
                     return column;
                 })
             };
@@ -248,7 +248,7 @@ export const deleteNoteTaskOnServer = (columnId, taskId) => {
 export const changeNoteTaskDateOnServer = (columnId, task, newDate) => {
     return (dispatch) => {
         dispatch(changeNoteTaskDate(columnId, task.id, newDate));
-        noteTaskAPI.updateNoteTaskDate(task, newDate).then(data => {});
+        noteTaskAPI.updateNoteTaskPatch(task.id, 'date', newDate).then(data => {});
     };
 };
 
@@ -256,7 +256,7 @@ export const updateNoteTaskSecondsOnServer = (columnId, taskId, newSeconds) => {
     return (dispatch) => {
         debugger;
         dispatch(editTaskSeconds(columnId, taskId, newSeconds));
-        noteTaskAPI.updateNoteTaskSeconds(taskId, newSeconds).then(data => {});
+        noteTaskAPI.updateNoteTaskPatch(taskId, 'seconds', newSeconds).then(data => {});
     };
 };
 
